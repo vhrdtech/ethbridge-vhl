@@ -1,0 +1,36 @@
+///
+struct Status {
+	state: State,
+	mode: Mode,
+	byte_counters: ByteCounters,
+	frame_counters: FrameCounters,
+	error_counters: ErrorCounters,
+}
+
+enum State {
+	Unconfigured,
+	Configured
+}
+
+enum Mode {
+	BusOff,
+	NotBusOff(bus_config::Mode)
+}
+
+struct RateCounter<T: WholeNumber[U]> {
+	current: T[U],
+	rate: f32[U/s]
+}
+
+struct ByteCounters {
+	bytes_in_total: RateCounter<u64[byte]>,
+	bytes_in_classical: RateCounter<u64[byte]>,
+	bytes_in_fd: RateCounter<u64[byte]>,
+	bytes_out_total: RateCounter<u64[byte]>,
+	bytes_out_classical: RateCounter<u64[byte]>,
+	bytes_out_fd: RateCounter<u64[byte]>,
+}
+
+struct FrameCounters {
+
+}

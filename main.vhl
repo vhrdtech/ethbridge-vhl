@@ -1,0 +1,20 @@
+use canbus_vhl::{Frame, FrameId};
+
+
+/ {
+	/// All available CAN Bus interfaces.
+	/bus_list([bus_config::Token; max 16]) {
+		access: ro
+	}
+
+	/// Get interfaces state (unconfigured / configured).
+	/bus_state(fn(bus: bus_config::Token) -> bus_config::State) {}
+
+	/// Setup bus mode, speed, hardware filters and start bus communication.
+	/bus_configure(fn(bus: bus_config::Unconfigured) -> bus_config::Configured) {}
+
+	/// Get interface status, packet counters, byte counters, error counters.
+	/bus_status(fn(freq: time::Hertz, bus: bus_config::Token) -> stream<bus_status::Status>) {
+		/reset_counters(fn(bus: bus_config::Token)) {}
+	}
+}

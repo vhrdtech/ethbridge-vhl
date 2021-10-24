@@ -1,0 +1,71 @@
+/// Unique identifier of the bus, can only be obtained from backend.
+token Token {
+	bus_id: u8
+}
+
+enum State {
+	Unconfigured(Unconfigured),
+	Configured(Configured)
+}
+
+struct Unconfigured {
+	bus: BusToken
+}
+
+struct Configured {
+	bus: Token,
+	config: Config,
+}
+
+struct Config {
+	can_core_freq: time::Hertz,
+	standard: Standard,
+	mode: Mode,
+	transmit_pause: bool,
+	automatic_retransmission: bool,
+}
+
+enum Standard {
+	Classical(NominalBitTiming),
+	FD(FDConfig),
+	// XL(NominalBitTiming, DataBitTiming)
+}
+
+struct NominalBitTiming {
+    sjw: u8,
+    brp: u16,
+    tseg1: u8,
+    tseg2: u8
+}
+
+struct DataBitTiming {
+    sjw: u8,
+    brp: u8,
+    tseg1: u8,
+    tseg2: u8
+}
+
+struct FDConfig {
+	nbt: NominalBitTiming,
+	dbt: DataBitTiming,
+	non_iso: bool,
+}
+
+enum Mode {
+	/// Normal operation mode
+    Normal,
+    /// Intended for applications that adapt themselves to different CAN bitrates.
+    /// Frames can be sent and received, acknowledges are given to valid received frames.
+    /// No error or overload frames are sent.
+    /// Entered manually in initialization, when tx handler was not able to read message RAM in time
+    /// or when clock calibration is in progress.
+    /// Can be exited at any time.
+    Restricted,
+    /// Only recessive bits are sent on the bus. Frames can only be received.
+    /// Can be used to analyze traffic on the bus without affecting it in any way.
+    /// Entered manually in initialization or on error level S3 (TTOST.EL=11)
+    /// Can be exited at any time.
+    BusMonitoring,
+	ExternalLoopback,
+	InternalLoopback,
+}
