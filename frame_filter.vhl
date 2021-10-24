@@ -1,0 +1,15 @@
+use canbus_vhl::{StandardId, ExtendedId};
+
+enum Filter {
+	Standard(IdFilter<StandardId>),
+	Extended(IdFilter<ExtendedId>)
+}
+
+enum IdFilter<T> {
+	Mask {
+		mask: T,
+		value: T
+	},
+	Match(T),
+	Range(T, T)
+}

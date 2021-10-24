@@ -1,5 +1,5 @@
 use canbus_vhl::{Frame, FrameId};
-
+use frame_filter::Filter;
 
 / {
 	/// All available CAN Bus interfaces.
@@ -17,4 +17,6 @@ use canbus_vhl::{Frame, FrameId};
 	/bus_status(fn(freq: time::Hertz, bus: bus_config::Token) -> stream<bus_status::Status>) {
 		/reset_counters(fn(bus: bus_config::Token)) {}
 	}
+
+	/frames(fn(bus: bus_config::Token, filters: [Filter; max 64]) -> stream<Frame>) {}
 }
